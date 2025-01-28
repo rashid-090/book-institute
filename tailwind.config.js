@@ -15,9 +15,10 @@ export default {
       colors: {
         mainclr: "#970747",
         mainhvr: "#970747",
+        maingrd2: "#490222",
       },
       backgroundImage: {
-        // "home-bg": "url('./assets/images/heera-bg.webp')",
+        "home-bg": "url('./assets/bookbg.webp')",
       },
     },
   },

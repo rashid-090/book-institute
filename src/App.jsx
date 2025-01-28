@@ -17,7 +17,7 @@ const Layout = () => {
        <ToastContainer position='bottom-right' theme='dark'/>
       <Header/>
       <ScrollToTop />
-      <div className='pt-20'><Outlet /></div>
+      <div className='pt-16'><Outlet /></div>
       <Footer/>
     </div>
   )
