@@ -35,7 +35,7 @@ const Footer = () => {
         <div className=" border-b py-5 pt-10 flex justify-center">
           <div className="flex text-xl xl:text-2xl gap-5">
             {socials?.map((data, i) => (
-              <div className="bg-mainclr hover:bg-black duration-200 text-white w-10 h-10 xl:w-12 xl:h-12 rounded-full grid place-items-center">
+              <div className="bg-mainclr  hover:bg-black duration-200 text-white w-10 h-10 xl:w-12 xl:h-12 rounded-full grid place-items-center">
                 <a className="" key={i} href={data.link}>
                   {data.icon}
                 </a>
