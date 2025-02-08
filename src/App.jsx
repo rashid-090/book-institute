@@ -1,4 +1,4 @@
-
+import React from 'react';
 import './App.css'
 import { ScrollToTop } from "react-router-scroll-to-top";
 import { lazy, Suspense, useState, useEffect} from "react";
