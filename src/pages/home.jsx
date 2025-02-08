@@ -5,23 +5,23 @@ import { Link } from "react-router-dom";
 const calltoAction = [
   {
     title: `Buy the Book`,
-    url: `/`,
+    url: `/book`,
   },
   {
     title: `Register Course`,
-    url: `/`,
+    url: `/register-course`,
   },
   {
     title: `Prove Theory`,
-    url: `/`,
+    url: `/prove-theory`,
   },
   {
     title: `Collaborate`,
-    url: `/`,
+    url: `/collaborate`,
   },
 ];
 
-const home = () => {
+const Home = () => {
   return (
     <section className="bg-home-bg bg-cover bg-center bg-no-repeat grid  place-items-center w-full h-screen relative">
       <div className="bg-[#00000073] absolute w-full h-full"></div>
@@ -37,7 +37,7 @@ const home = () => {
         </p>
         <div className="flex justify-between w-fit gap-5 mt-5">
           {calltoAction?.map((bt, i) => (
-            <Link to={bt.url} class="relative">
+            <Link to={bt.url} class="relative" key={i}>
               <button class=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-10 py-4 text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
                 <span class="relative z-[1]">{bt.title}</span>
               </button>
@@ -49,4 +49,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default Home;

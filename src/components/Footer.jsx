@@ -30,7 +30,7 @@ const socials = [
 
 const Footer = () => {
   return (
-    <section className="bg-gray-100 w-full h-full">
+    <section className="bg-gray-100 text-black w-full h-full" id="cform">
       <div className="w-10/12 mx-auto">
         <div className=" border-b py-5 pt-10 flex justify-center">
           <div className="flex text-xl xl:text-2xl gap-5">

@@ -9,7 +9,12 @@ import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-
 
 import {Header, Footer} from './components';
 
-import Home from './pages/home'
+import Home from './pages/home';
+import Book from './pages/Books';
+import Course from './pages/Course';
+import Theory from './pages/Theory';
+import Collaborate from './pages/Collaborate';
+import Jobs from './pages/Jobs';
 
 const Layout = () => {
   return(
@@ -42,6 +47,46 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<p>Loading..</p>}>
             <Home/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/book",
+        element: (
+          <Suspense fallback={<p>Loading..</p>}>
+            <Book/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/register-course",
+        element: (
+          <Suspense fallback={<p>Loading..</p>}>
+            <Course/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/prove-theory",
+        element: (
+          <Suspense fallback={<p>Loading..</p>}>
+            <Theory/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/collaborate",
+        element: (
+          <Suspense fallback={<p>Loading..</p>}>
+            <Collaborate/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/jobs",
+        element: (
+          <Suspense fallback={<p>Loading..</p>}>
+            <Jobs/>
           </Suspense>
         ),
       },
