@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const CourseRegistrationForm = () => {
-  const [step, setStep] = useState(1); // Track current step
+const CourseRegistrationForm = ({ isModalOpen, setIsModalOpen }) => {
+  const [step, setStep] = useState(0); // Track current step
+  const [direction, setDirection] = useState(1); // Track animation direction (1 for next, -1 for prev)
   const [formData, setFormData] = useState({
     fullName: "",
     dob: "",
@@ -26,10 +28,22 @@ const CourseRegistrationForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setErrorMessage(""); // Clear error message when user types
   };
 
-  const nextStep = () => setStep(step + 1);
-  const prevStep = () => setStep(step - 1);
+  const nextStep = () => {
+    if (validateCurrentField()) {
+      setDirection(1); // Set direction to "next"
+      setStep(step + 1);
+    }
+  };
+
+  const prevStep = () => {
+    setDirection(-1); // Set direction to "prev"
+    setStep(step - 1);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
 
   const validateSerialNumber = async () => {
     // Simulate backend validation
@@ -41,333 +55,263 @@ const CourseRegistrationForm = () => {
     }
   };
 
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <>
-            <h2 className="text-xl font-semibold text-white mb-6 text-center">
-              Step 1: Personal Details
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Full Name */}
-              <div className="md:col-span-2">
-                <label className="block text-white">What’s your full name?</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  placeholder="Enter your full name"
-                  className="w-full p-2 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                />
-              </div>
+  const validateCurrentField = () => {
+    const field = fields[step];
+    const value = formData[field.name];
 
-              {/* Age & Gender */}
-              <div>
-                <label className="block text-white">Date of Birth</label>
-                <input
-                  type="date"
-                  name="dob"
-                  value={formData.dob}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                />
-              </div>
-              <div>
-                <label className="block text-white">Gender</label>
-                <select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 text-gray-400 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                >
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-
-              {/* Address */}
-              <div className="md:col-span-2">
-                <label className="block text-white">Can you share your address?</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="Street Address"
-                  className="w-full p-2 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                />
-              </div>
-
-              <div>
-                <label className="block text-white">District</label>
-                <input
-                  type="text"
-                  name="district"
-                  value={formData.district}
-                  onChange={handleChange}
-                  placeholder="District"
-                  className="w-full p-2 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                />
-              </div>
-              <div>
-                <label className="block text-white">State</label>
-                <input
-                  type="text"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
-                  placeholder="State"
-                  className="w-full p-2 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-white">Country</label>
-                <input
-                  type="text"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  placeholder="Country"
-                  className="w-full p-2 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                />
-              </div>
-            </div>
-
-            
-          </>
-        );
-
-      case 2:
-        return (
-          <>
-            <h2 className="text-xl font-semibold text-white mb-6 text-center">
-              Step 2: Educational Background
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Education Level */}
-              <div className="md:col-span-2">
-                <label className="block text-white">What’s your highest level of education?</label>
-                <div className="flex flex-wrap gap-4 mt-2">
-                  {["School", "Graduate", "PG", "MPhil", "PhD", "Other"].map((level) => (
-                    <label key={level} className="flex items-center text-white">
-                      <input
-                        type="checkbox"
-                        name="educationLevel"
-                        value={level}
-                        checked={formData.educationLevel === level}
-                        onChange={handleChange}
-                        className="mr-2"
-                      />
-                      {level}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Specify Education */}
-              <div className="md:col-span-2">
-                <label className="block text-white">Can you specify?</label>
-                <input
-                  type="text"
-                  name="educationSpecify"
-                  value={formData.educationSpecify}
-                  onChange={handleChange}
-                  placeholder="Specify your education"
-                  className="w-full p-2 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                />
-              </div>
-            </div>
-          </>
-        );
-
-      case 3:
-        return (
-          <>
-            <h2 className="text-xl font-semibold text-white mb-6 text-center">
-              Step 3: Professional Background
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Professional Background */}
-              <div className="md:col-span-2">
-                <label className="block text-white">What’s your current professional background?</label>
-                <select
-                  name="professionalBackground"
-                  value={formData.professionalBackground}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 text-gray-400 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                >
-                  <option value="">Select Background</option>
-                  {["Business", "Retired", "Teaching", "Health", "Engineering", "Other"].map((bg) => (
-                    <option key={bg} value={bg}>{bg}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Specify Professional Background */}
-              <div className="md:col-span-2">
-                <label className="block text-white">Can you specify?</label>
-                <input
-                  type="text"
-                  name="professionalSpecify"
-                  value={formData.professionalSpecify}
-                  onChange={handleChange}
-                  placeholder="Specify your professional background"
-                  className="w-full p-2 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                />
-              </div>
-            </div>
-          </>
-        );
-
-      case 4:
-        return (
-          <>
-            <h2 className="text-xl font-semibold text-white mb-6 text-center">
-              Step 4: Book Requirement Check
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Has Read Book */}
-              <div className="md:col-span-2">
-                <label className="block text-white">Have you read the book?</label>
-                <div className="flex gap-4 mt-2">
-                  <label className="flex items-center text-white">
-                    <input
-                      type="radio"
-                      name="hasReadBook"
-                      value="Yes"
-                      checked={formData.hasReadBook === "Yes"}
-                      onChange={handleChange}
-                      className="mr-2"
-                    />
-                    Yes
-                  </label>
-                  <label className="flex items-center text-white">
-                    <input
-                      type="radio"
-                      name="hasReadBook"
-                      value="No"
-                      checked={formData.hasReadBook === "No"}
-                      onChange={handleChange}
-                      className="mr-2"
-                    />
-                    No
-                  </label>
-                </div>
-              </div>
-
-              {/* Serial Number (Conditional) */}
-              {formData.hasReadBook === "Yes" && (
-                <div className="md:col-span-2">
-                  <label className="block text-white">Enter Book Serial Number</label>
-                  <input
-                    type="text"
-                    name="bookSerialNumber"
-                    value={formData.bookSerialNumber}
-                    onChange={handleChange}
-                    placeholder="Enter your book serial number, ex:12345"
-                    className="w-full p-2 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
-                  />
-                  {errorMessage && (
-                    <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Buy the Book Button (Conditional) */}
-            {(formData.hasReadBook === "No" || errorMessage) && (
-              <div className="mt-4">
-                <button
-                  onClick={() => alert("Redirect to Buy the Book page")}
-                  className="bg-mainclr text-white p-2 rounded-md hover:bg-mainhvr transition"
-                >
-                  Buy the Book
-                </button>
-              </div>
-            )}
-          </>
-        );
-
-      case 5:
-        return (
-          <>
-            <h2 className="text-xl font-semibold text-white mb-6 text-center">
-              Step 5: Confirmation
-            </h2>
-            <div className="text-white text-center">
-              <p>Thank you, {formData.fullName}.</p>
-              <p>We’re processing your registration and will share the fee and schedule details shortly.</p>
-            </div>
-          </>
-        );
-
-      default:
-        return null;
+    // Required field validation
+    if (!value) {
+      setErrorMessage("This field is required.");
+      return false;
     }
+
+    // Specific field validations
+    switch (field.name) {
+      case "email":
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          setErrorMessage("Please enter a valid email address.");
+          return false;
+        }
+        break;
+      case "mobile":
+      case "whatsapp":
+        if (!/^\d{10}$/.test(value)) {
+          setErrorMessage("Please enter a valid 10-digit phone number.");
+          return false;
+        }
+        break;
+      case "dob":
+        const dobDate = new Date(value);
+        const today = new Date();
+        if (dobDate >= today) {
+          setErrorMessage("Please enter a valid date of birth.");
+          return false;
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrorMessage(""); // Clear error message if validation passes
+    return true;
   };
 
+  const fields = [
+    {
+      label: "What’s your full name?",
+      name: "fullName",
+      type: "text",
+      placeholder: "Enter your full name",
+    },
+    {
+      label: "Date of Birth",
+      name: "dob",
+      type: "date",
+      placeholder: "Enter your date of birth",
+    },
+    {
+      label: "Gender",
+      name: "gender",
+      type: "select",
+      options: ["Male", "Female", "Other"],
+      placeholder: "Select Gender",
+    },
+    {
+      label: "Can you share your address?",
+      name: "address",
+      type: "text",
+      placeholder: "Street Address",
+    },
+    {
+      label: "District",
+      name: "district",
+      type: "text",
+      placeholder: "District",
+    },
+    {
+      label: "State",
+      name: "state",
+      type: "text",
+      placeholder: "State",
+    },
+    {
+      label: "Country",
+      name: "country",
+      type: "text",
+      placeholder: "Country",
+    },
+    {
+      label: "Mobile Number",
+      name: "mobile",
+      type: "text",
+      placeholder: "Enter your mobile number",
+    },
+    {
+      label: "WhatsApp Number",
+      name: "whatsapp",
+      type: "text",
+      placeholder: "Enter your WhatsApp number",
+    },
+    {
+      label: "Email",
+      name: "email",
+      type: "email",
+      placeholder: "Enter your email",
+    },
+    {
+      label: "What’s your highest level of education?",
+      name: "educationLevel",
+      type: "select",
+      options: ["School", "Graduate", "PG", "MPhil", "PhD", "Other"],
+      placeholder: "Select Education Level",
+    },
+    {
+      label: "Can you specify your education?",
+      name: "educationSpecify",
+      type: "text",
+      placeholder: "Specify your education",
+    },
+    {
+      label: "What’s your current professional background?",
+      name: "professionalBackground",
+      type: "select",
+      options: ["Business", "Retired", "Teaching", "Health", "Engineering", "Other"],
+      placeholder: "Select Professional Background",
+    },
+    {
+      label: "Can you specify your professional background?",
+      name: "professionalSpecify",
+      type: "text",
+      placeholder: "Specify your professional background",
+    },
+    {
+      label: "Have you read the book?",
+      name: "hasReadBook",
+      type: "select",
+      options: ["Yes", "No"],
+      placeholder: "Select an option",
+    },
+    {
+      label: "Enter Book Serial Number",
+      name: "bookSerialNumber",
+      type: "text",
+      placeholder: "Enter your book serial number, ex:12345",
+      condition: formData.hasReadBook === "Yes",
+    },
+  ];
+
+  const field = fields[step];
+
+  // Skip the bookSerialNumber field if hasReadBook is "No"
+  const shouldSkipBookSerialNumber = formData.hasReadBook === "No" && field.name === "bookSerialNumber";
+
   return (
-    <section className="w-[100%] md:w-[60%] mx-auto bg-white/20 text-black backdrop-blur-md rounded-lg p-6 shadow-lg">
-      {/* Progress Bar */}
-      <div className="flex justify-between items-center mb-6 relative">
-        {["Personal Details", "Education", "Professional", "Book Check", "Confirmation"].map((label, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-white transition-all duration-300 ${
-                step >= index + 1 ? "bg-mainclr" : "bg-gray-500"
-              }`}
+    <>
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }} // Elastic effect for modal
+              className="bg-white/20 backdrop-blur-md rounded-lg p-6 shadow-lg w-[90%] md:w-[40%] relative py-10 overflow-hidden"
             >
-              {index + 1}
-            </div>
-            <span className="text-white text-sm mt-2 transition-all duration-300">
-              {label}
-            </span>
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                className="absolute top-4 right-4 text-white hover:text-gray-300 text-xl"
+              >
+                &times;
+              </button>
+
+              {/* Render Current Field with AnimatePresence */}
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={step}
+                  custom={direction}
+                  initial={{ x: direction > 0 ? "100%" : "-100%" }} // Slide in from right or left
+                  animate={{ x: 0 }} // Center position
+                  exit={{ x: direction > 0 ? "-110%" : "110%" }} // Slide out to left or right
+                  transition={{ type: "spring", stiffness: 150, damping: 20 }} // Elastic effect for fields
+                  className="w-full"
+                >
+                  <h2 className="text-xl font-semibold text-white mb-3 text-center">
+                    {field.label}
+                  </h2>
+                  {field.type === "select" ? (
+                    <select
+                      name={field.name}
+                      value={formData[field.name]}
+                      onChange={handleChange}
+                      className="w-full p-2 border border-gray-300 text-black rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
+                    >
+                      <option value="">{field.placeholder}</option>
+                      {field.options.map((option, index) => (
+                        <option key={index} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      value={formData[field.name]}
+                      onChange={handleChange}
+                      placeholder={field.placeholder}
+                      className="w-full p-2 border border-gray-300 text-black rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-mainclr"
+                    />
+                  )}
+                  {(errorMessage && field.name !== "bookSerialNumber") && (
+                    <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Navigation Buttons */}
+              <div className="flex justify-between mt-6">
+                {step > 0 && (
+                  <button
+                    onClick={prevStep}
+                    className="bg-gray-500 text-white py-1 rounded-full px-5 hover:bg-gray-600 transition"
+                  >
+                    Previous
+                  </button>
+                )}
+                {step < fields.length - 1 ? (
+                  formData.hasReadBook === "No" && field.name === "hasReadBook" ? (
+                    <button
+                      onClick={() => alert("Redirect to Buy the Book page")}
+                      className="bg-mainclr text-white py-1 rounded-full px-5 hover:bg-mainhvr transition"
+                    >
+                      Buy the Book
+                    </button>
+                  ) : (
+                    <button
+                      onClick={field.name === "bookSerialNumber" ? validateSerialNumber : nextStep}
+                      className="bg-mainclr text-white py-1 rounded-full px-5 hover:bg-mainhvr transition"
+                    >
+                      Next
+                    </button>
+                  )
+                ) : (
+                  <button
+                    onClick={() => {
+                      alert("Form Submitted!");
+                      closeModal();
+                    }}
+                    className="bg-green-500 text-white py-1 rounded-full px-5 hover:bg-green-600 transition"
+                  >
+                    Submit
+                  </button>
+                )}
+              </div>
+            </motion.div>
           </div>
-        ))}
-        {/* Connector Lines */}
-        <div className="absolute top-4 left-0 right-0 h-0.5 bg-gray-500 z-[-1]"></div>
-        <div
-          className="absolute top-4 left-0 h-0.5 bg-mainclr z-[-1] transition-all duration-300"
-          style={{ width: `${((step - 1) / 4) * 100}%` }}
-        ></div>
-      </div>
-
-      {/* Render Current Step */}
-      <div className="transition-all duration-300 transform">
-        {renderStep()}
-      </div>
-
-      {/* Navigation Buttons */}
-      <div className="flex justify-between mt-6">
-        {step > 1 && (
-          <button
-            onClick={prevStep}
-            className="bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600 transition"
-          >
-            Previous
-          </button>
         )}
-        {step < 5 ? (
-          <button
-            onClick={step === 4 ? validateSerialNumber : nextStep}
-            className="bg-mainclr text-white p-2 rounded-md hover:bg-mainhvr transition"
-          >
-            Next
-          </button>
-        ) : (
-          <button
-            onClick={() => alert("Form Submitted!")}
-            className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition"
-          >
-            Submit
-          </button>
-        )}
-      </div>
-    </section>
+      </AnimatePresence>
+    </>
   );
 };
 
