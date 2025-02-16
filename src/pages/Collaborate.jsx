@@ -14,7 +14,7 @@ const Collaborate = () => {
       <PreventNavigation/>
     <section className="w-11/12 xl:w-10/12 mx-auto py-20">
           <h1 className="text-5xl font-normal capitalize text-center pb-10">Collaborate with Us</h1>
-          <div className="w-full grid place-items-center"><button onClick={()=>handelButton()} className="bg-mainclr px-10 h-12 rounded-full capitalize">Collaborate</button></div>
+          <div className="w-full grid place-items-center"><button onClick={()=>handelButton()} className="bg-mainclr px-10 h-12 rounded-full capitalize">Collaborate with us</button></div>
           {/* form */}
           <Contact isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
     </section>

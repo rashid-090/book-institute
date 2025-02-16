@@ -22,7 +22,7 @@ const Layout = () => {
        <ToastContainer position='bottom-right' theme='dark'/>
       <Header/>
       <ScrollToTop />
-      <div className='pt-16'><Outlet /></div>
+      <div className='pt-14 md:pt-16'><Outlet /></div>
       <Footer/>
     </div>
   )

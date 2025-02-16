@@ -45,10 +45,10 @@ const Footer = () => {
         </div>
         <div className="py-5">
           <ul className="flex justify-center gap-3">
-            <li className="list-item-with-dot">Home</li>
-            <li className="list-item-with-dot">About</li>
-            <li className="list-item-with-dot">Books</li>
-            <li className="list-item-with-dot">Contact</li>
+            <li className="list-item-with-dot">Terms and Conditions</li>
+            <li className="list-item-with-dot">Privacy Policy</li>
+            {/* <li className="list-item-with-dot">Books</li>
+            <li className="list-item-with-dot">Contact</li> */}
           </ul>
           <div className="text-xs text-gray-500 text-center pt-5">
             <p>Copyright © 2025 Books. All rights reserved</p>

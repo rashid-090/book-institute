@@ -4,27 +4,25 @@ import { Link } from 'react-router-dom';
 
 const NavLinks = [
   {
-    title: `Home`,
-    url: `/`,
+    title: `Buy the Book`,
+    url: `#book`,
   },
   {
-    title: `About`,
-    url: `#`,
+    title: `Register Course`,
+    url: `#register-course`,
   },
   {
-    title: `Jobs`,
-    url: `/jobs`,
+    title: `Prove Theory`,
+    url: `#prove-theory`,
   },
   {
-    title: `Blog`,
-    url: `#`,
-  },
-  {
-    title: `Contact`,
-    url: `/collaborate`,
+    title: `Collaborate`,
+    url: `#collaborate`,
   },
 
 ];
+
+
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -45,16 +43,16 @@ const Header = () => {
       }`}
     >
       <div className="w-11/12 xl:w-10/12 mx-auto py-1 xl:py-3 flex items-center justify-between">
-        <h1 className='text-white text-3xl font-black uppercase tracking-widest'>My BOOK</h1>
+        <Link to={'/'}><h1 className='text-white text-3xl font-black uppercase tracking-widest'>My BOOK</h1></Link>
         <ul className={`hidden lg:flex gap-10 text-base capitalize ${!isScrolled ? "text-white " : "text-white"} capitalize`}>
         {NavLinks?.map((bt, i) => (
-            <Link to={bt.url} key={i}>
+            <a href={bt.url} key={i}>
               {bt.title}
-            </Link>
+            </a>
           ))}
         </ul>
-        <button className={`shadow-xl ${!isScrolled ? "bg-white border-mainhvr  text-mainclr duration-150 hover:border-mainhvr" : "bg-white border-mainhvr  text-mainclr hover:text-white duration-150 hover:border-mainhvr"} rounded-lg xl:rounded-xl px-5 border text-sm xl:text-base py-2 `}>
-          <a href='#cform'>Apply now</a>
+        <button className={`shadow-xl ${!isScrolled ? "bg-white border-mainhvr  text-mainclr duration-150 hover:border-mainhvr" : "bg-white border-mainhvr  text-mainclr  duration-150 hover:border-mainhvr"} rounded-lg xl:rounded-xl px-5 border text-sm xl:text-base py-2 `}>
+          <Link to={'/jobs'}>Apply for Jobs</Link>
         </button>
       </div>
     </nav>
