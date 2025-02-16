@@ -18,7 +18,8 @@ import Jobs from './pages/Jobs';
 
 const Layout = () => {
   return(
-    <div className="app 2xl:max-w-[2500px] mx-auto flex flex-col justify-between min-h-screen">
+    <div className="app 2xl:max-w-[2500px] mx-auto flex flex-col justify-between min-h-screen relative">
+      <div className="bg-[#00000078] absolute w-full h-full"></div>
        <ToastContainer position='bottom-right' theme='dark'/>
       <Header/>
       <ScrollToTop />
