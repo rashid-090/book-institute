@@ -17,9 +17,9 @@ Explore the Universe Through the Grand Unified Theory of Everything.
         <p className="md:w-[60%] mx-auto text-gray-200 text-xs md:text-base">
         Dive into Unified Quantum Field Theory (UQFT) and explore the mysteries of 5-Dimensional Quantum SpaceTime Super-Relativity and SuperTime Singularity. Unlock the profound connections within QCCD (Quantum Chrono-Chromo Dynamics) and SSD (SuperSine Dynamics) as you elevate your understanding to the real realm of 5 dimensions.
         </p>
-        <a href="#book" class="relative">
-              <button class=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
-                <span class="relative z-[1]">Learn More</span>
+        <a href="#book" className="relative">
+              <button className=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
+                <span className="relative z-[1]">Learn More</span>
               </button>
         </a>
 
@@ -37,9 +37,9 @@ Explore the Universe Through the Grand Unified Theory of Everything.
         The profound implications of our theory on science, philosophy, and daily life.
 This book is more than knowledge—it’s the key to mastering the principles of existence.
         </p>
-        <Link to={'/book'} class="relative">
-              <button class=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
-                <span class="relative z-[1]">Buy the Book</span>
+        <Link to={'/book'} className="relative">
+              <button className=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
+                <span className="relative z-[1]">Buy the Book</span>
               </button>
         </Link>
        
@@ -55,9 +55,9 @@ Our Courses, Trainings, Seminars and Workshops
         <p className="md:w-[60%] mx-auto text-gray-200 text-xs md:text-base">
         Step into a transformative learning experience designed to expand your understanding of time, space, and self. Each module is meticulously crafted to align with the principles of Q-clock dynamics, supertime, and spacetime harmonics, offering cutting-edge insights into personal growth, education, and corporate excellence.        </p>
         
-        <Link to={'/register-course'} class="relative">
-              <button class=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
-                <span class="relative z-[1]">Register Course</span>
+        <Link to={'/register-course'} className="relative">
+              <button className=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
+                <span className="relative z-[1]">Register Course</span>
               </button>
         </Link>
        
@@ -73,9 +73,9 @@ Our Courses, Trainings, Seminars and Workshops
         Do you have the intellect, expertise, and conviction to challenge our groundbreaking theory? If you can successfully refute it, you will be awarded the prestigious Bharath Noble Prize
  </p>
         
-        <Link to={'/prove-theory'} class="relative">
-              <button class=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
-                <span class="relative z-[1]">Prove Theory</span>
+        <Link to={'/prove-theory'} className="relative">
+              <button className=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
+                <span className="relative z-[1]">Prove Theory</span>
               </button>
         </Link>
        
@@ -89,9 +89,9 @@ Our Courses, Trainings, Seminars and Workshops
         <p className="md:w-[60%] mx-auto text-gray-200 text-xs md:text-base">
         Looking for an opportunity to work on cutting-edge ideas that push the boundaries of knowledge? Or perhaps you want to offer us a business collaboration as “what I can do”? Looking for a franchisee opportunity on mindfulness, Time yoga, motivational and transformational sphere? Here’s how you can connect with us. </p>
         
-        <Link to={'/collaborate'} class="relative">
-              <button class=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
-                <span class="relative z-[1]">Collaborate</span>
+        <Link to={'/collaborate'} className="relative">
+              <button className=" bg-gradient-to-r from-mainclr to-maingrd2 relative px-5 xl:px-10 py-2 xl:py-4 text-sm md:text-lg text-white border-none rounded-full cursor-pointer overflow-hidden shine-button">
+                <span className="relative z-[1]">Collaborate</span>
               </button>
         </Link>
        

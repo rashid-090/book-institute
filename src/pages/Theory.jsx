@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PreventNavigation, Theory } from "../components";
+import { PreventNavigation, Theory } from "../components/user";
 
 const ProveTheory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
