@@ -1,5 +1,5 @@
 import React from 'react'
-import { PreventNavigation, Regcousre } from "../components";
+import { PreventNavigation, Regcousre } from "../components/user";
 import { useState } from 'react';
 const Course = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

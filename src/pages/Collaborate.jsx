@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Contact, PreventNavigation } from "../components";
+import { Contact, PreventNavigation } from "../components/user";
 
 
 const Collaborate = () => {

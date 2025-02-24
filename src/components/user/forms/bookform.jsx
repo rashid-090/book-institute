@@ -1,37 +1,71 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { URL } from "../../../Common/api";
+import { config } from "../../../Common/configurations";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const BookForm = ({ isModalOpen, setIsModalOpen }) => {
   const [step, setStep] = useState(0); // Track current step
   const [direction, setDirection] = useState(1); // Track animation direction (1 for next, -1 for prev)
   const [formData, setFormData] = useState({
-    fullName: "",
-    dob: "",
+    name: "",
+    age: "",
     gender: "",
-    address: "",
-    district: "",
-    state: "",
-    country: "",
     mobile: "",
     whatsapp: "",
     email: "",
+    delivery: {
+      address: "",
+      locality: "",
+      pincode: "",
+      district: "",
+      state: "",
+      country: "",
+    },
+    totalPrice: 5000
   });
+
   const [errors, setErrors] = useState({}); // Track validation errors
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    if (["address", "locality", "pincode", "district", "state", "country"].includes(name)) {
+      // Update nested delivery fields
+      setFormData((prevData) => ({
+        ...prevData,
+        delivery: {
+          ...prevData.delivery,
+          [name]: value,
+        },
+      }));
+    } else {
+      // Update top-level fields
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+
     // Clear the error for the field when the user starts typing
     setErrors({ ...errors, [name]: "" });
   };
 
+
   const validateField = (name, value) => {
+    console.log("Name :", name, "   Value:", value);
     switch (name) {
-      case "fullName":
+      case "name":
         if (!value.trim()) return "Full name is required";
         break;
-      case "dob":
-        if (!value) return "Date of birth is required";
+      case "age":
+        if (!value) return "Age is required";
+        if (!/^\d+$/.test(value)) return "Age must be a valid number";
+        break;
+      case "pincode":
+        if (!value) return "pincode is required";
+        if (!/^\d{5,7}$/.test(value)) return "Pincode must be valid";
         break;
       case "gender":
         if (!value) return "Gender is required";
@@ -50,15 +84,15 @@ const BookForm = ({ isModalOpen, setIsModalOpen }) => {
         break;
       case "mobile":
         if (!value.trim()) return "Mobile number is required";
-        if (!/^\d{10}$/.test(value)) return "Invalid mobile number";
+        if (!/^\d{10,12}$/.test(value)) return "Mobile number must be 10 to 12 digits";
         break;
       case "whatsapp":
         if (!value.trim()) return "WhatsApp number is required";
-        if (!/^\d{10}$/.test(value)) return "Invalid WhatsApp number";
+        if (!/^\d{10,12}$/.test(value)) return "WhatsApp number must be 10 to 12 digits";
         break;
       case "email":
         if (!value.trim()) return "Email is required";
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email format";
         break;
       default:
         break;
@@ -66,9 +100,11 @@ const BookForm = ({ isModalOpen, setIsModalOpen }) => {
     return "";
   };
 
+
   const validateStep = () => {
     const field = fields[step];
-    const error = validateField(field.name, formData[field.name]);
+    const value = field.name in formData.delivery ? formData.delivery[field.name] : formData[field.name];
+    const error = validateField(field.name, value);
     if (error) {
       setErrors({ ...errors, [field.name]: error });
       return false;
@@ -76,82 +112,151 @@ const BookForm = ({ isModalOpen, setIsModalOpen }) => {
     return true;
   };
 
+
+
+
   const nextStep = () => {
-    if (!validateStep()) return; // Do not proceed if validation fails
-    setDirection(1); // Set direction to "next"
+    if (!validateStep()) return;
+    setDirection(1);
     setStep(step + 1);
   };
 
   const prevStep = () => {
-    setDirection(-1); // Set direction to "prev"
+    setDirection(-1);
     setStep(step - 1);
   };
+
+
+  // Saving the order to db
+  const saveOrder = async (response) => {
+    // setOrderPlacedLoading(true);
+
+    try {
+      // Make the first POST request to create the order
+      const orderResponse = await axios.post(
+        `${URL}/user/book-purchase`,
+        formData,
+        config
+      );
+
+
+
+      const { data } = orderResponse.data;
+
+      // Make the second POST request to verify payment with Razorpay and save that to database
+      await axios.post(
+        `${URL}/user/razor-verify`,
+        { ...response, order: data._id },
+        config
+      );
+
+      // Updating user side
+      // setOrderData(true);
+      toast.success("Book purchased");
+      // setOrderPlacedLoading(false);
+      // setConfirmationPage(true);
+      // navigateToOrderConfirmation(order);
+      // dispatch(clearCartOnOrderPlaced());
+
+    } catch (error) {
+      // Error Handling
+      console.log(error);
+      const errorMessage =
+        error.response?.data?.error ||
+        "Something went wrong. Please try again.";
+      toast.error(errorMessage);
+      // setOrderPlacedLoading(false);
+    }
+  };
+
+  // Initiating razor pay payment method or window
+  const initiateRazorPayPayment = async () => {
+    // Getting razor-pay secret key
+    const {
+      data: { key },
+    } = await axios.get(`${URL}/user/razor-key`, config);
+
+    // Convert total to paisa (multiply by 100)
+    const amountInPaisa = Math.round(5000 * 100);
+
+    // making razor-pay order
+    const {
+      data: { order },
+    } = await axios.post(
+      `${URL}/user/razor-order`,
+      { amount: amountInPaisa }, // Send amount in paisa
+      config
+    );
+
+
+    // setting razor pay configurations
+    let options = {
+      key: key,
+      amount: amountInPaisa, // Use the same amount in paisa
+      currency: "INR",
+      name: "Bharath Research Institute of Quantum Science and Time Intelligence",
+      description: "Test Transaction",
+      // image: { logo },
+      order_id: order.id,
+      handler: function (response) {
+        saveOrder(response);
+        console.log(response)
+      },
+      prefill: {
+        name: "Gaurav Kumar",
+        email: "gaurav.kumar@example.com",
+        contact: "9000090000",
+      },
+      notes: {
+        address: "Razor pay Corporate Office",
+      },
+      theme: {
+        color: "#880640",
+      },
+    };
+
+    // enabling razor-pay payment screen
+    const razor = new window.Razorpay(options);
+
+    razor.open();
+
+    // If failed toast it.
+    razor.on("payment.failed", function (response) {
+      toast.error(response.error.code);
+      toast.error(response.error.description);
+      toast.error(response.error.source);
+      toast.error(response.error.step);
+      toast.error(response.error.reason);
+      toast.error(response.error.metadata.order_id);
+      toast.error(response.error.metadata.payment_id);
+      // setOrderPlacedLoading(false);
+    });
+  };
+
+  const placeOrder = async () => {
+    initiateRazorPayPayment();
+
+  };
+
+
 
   const closeModal = () => setIsModalOpen(false);
 
   const fields = [
-    {
-      label: "What’s your full name?",
-      name: "fullName",
-      type: "text",
-      placeholder: "Enter your full name",
-    },
-    {
-      label: "Date of Birth",
-      name: "dob",
-      type: "date",
-      placeholder: "Enter your date of birth",
-    },
-    {
-      label: "Gender",
-      name: "gender",
-      type: "select",
-      options: ["Male", "Female", "Other"],
-      placeholder: "Select Gender",
-    },
-    {
-      label: "Can you share your address?",
-      name: "address",
-      type: "text",
-      placeholder: "Street Address",
-    },
-    {
-      label: "District",
-      name: "district",
-      type: "text",
-      placeholder: "District",
-    },
-    {
-      label: "State",
-      name: "state",
-      type: "text",
-      placeholder: "State",
-    },
-    {
-      label: "Country",
-      name: "country",
-      type: "text",
-      placeholder: "Country",
-    },
-    {
-      label: "Mobile Number",
-      name: "mobile",
-      type: "text",
-      placeholder: "Enter your mobile number",
-    },
-    {
-      label: "WhatsApp Number",
-      name: "whatsapp",
-      type: "text",
-      placeholder: "Enter your WhatsApp number",
-    },
-    {
-      label: "Email",
-      name: "email",
-      type: "email",
-      placeholder: "Enter your email",
-    },
+    { label: "What’s your full name?", name: "name", type: "text", placeholder: "Enter your full name" },
+    { label: "May I know your age?", name: "age", type: "number", placeholder: "" },
+    { label: "May I know your gender", name: "gender", type: "select", options: ["Male", "Female", "Other"], placeholder: "Select Gender" },
+    { label: "Can you share your address?", name: "address", type: "text", placeholder: "Street Address" },
+    { label: "Can you share your phone pincode?", name: "pincode", type: "number", placeholder: "" },
+    { label: "Can you share your locality?", name: "locality", type: "text", placeholder: "Locality" },
+    { label: "Can you share your district?", name: "district", type: "text", placeholder: "District" },
+    { label: "State", name: "state", type: "text", placeholder: "State" },
+    { label: "Country", name: "country", type: "text", placeholder: "Country" },
+    { label: "Mobile Number", name: "mobile", type: "text", placeholder: "Enter your mobile number" },
+    { label: "WhatsApp Number", name: "whatsapp", type: "text", placeholder: "Enter your WhatsApp number" },
+    { label: "Email", name: "email", type: "email", placeholder: "Enter your email" },
   ];
+
 
   const field = fields[step];
 
@@ -240,7 +345,8 @@ const BookForm = ({ isModalOpen, setIsModalOpen }) => {
                   <button
                     onClick={() => {
                       if (validateStep()) {
-                        alert("Form Submitted!");
+                        placeOrder()
+                        console.log(formData)
                         closeModal();
                       }
                     }}
@@ -250,6 +356,7 @@ const BookForm = ({ isModalOpen, setIsModalOpen }) => {
                   </button>
                 )}
               </div>
+
             </motion.div>
           </div>
         )}
